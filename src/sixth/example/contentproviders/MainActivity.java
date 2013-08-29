@@ -1,13 +1,19 @@
 package sixth.example.contentproviders;
 
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.RawContacts;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.view.View.OnClickListener;
-import android.provider.ContactsContract;
-import android.database.Cursor;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -22,6 +28,26 @@ public class MainActivity extends Activity {
 				queryContact ();
 			}
 		});
+		Button addButton = (Button)findViewById(R.id.button2);
+		addButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View arg0) {
+				addContact("Steve Wozniak");
+			}
+		});
+	}
+
+	private void addContact(String newName) {
+		ContentValues myContact = new ContentValues();
+		myContact.put(RawContacts.ACCOUNT_NAME, newName);
+		myContact.put(RawContacts.ACCOUNT_TYPE, newName);
+		Uri addUri = getContentResolver().insert(RawContacts.CONTENT_URI, myContact);
+		long rawContactId = ContentUris.parseId(addUri);
+		myContact.clear();
+		myContact.put(Data.RAW_CONTACT_ID, rawContactId);
+		myContact.put(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE);
+		myContact.put(StructuredName.DISPLAY_NAME, newName);
+		getContentResolver().insert(Data.CONTENT_URI, myContact);
+		Toast.makeText(this, "New Contact: " +newName, Toast.LENGTH_SHORT).show();
 	}
 
 	private void queryContact() {
