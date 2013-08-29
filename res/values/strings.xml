@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="display_data">Click button below to run a query</string>
     <string name="button_title">Click to Query Contacts Database</string>
-
+    <string name="append_data">Click to add to Contacts Database</string>
+    
 </resources>
